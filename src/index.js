@@ -59,6 +59,28 @@ app.post("/posttrans", async (req, res) => {
   }
 });
 
+app.get("/getTransbyID", async (req, res) => {
+  try {
+    const address =req.query.Address;
+    const transs = await transaction.find({
+      $or: [
+        { From: address.toLowerCase() },
+        { To: address.toLowerCase() }
+    ]
+               
+    });
+  const transhashs = transs.map(transaction => transaction.TransactionHash);
+    res.status(200).json({
+      message:"OKELA",
+      return:transhashs
+    }
+    );
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
